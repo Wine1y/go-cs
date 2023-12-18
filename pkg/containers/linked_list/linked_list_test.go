@@ -58,3 +58,23 @@ func TestSinglyLinkedList(t *testing.T) {
 		testLinkedListDelete(t, NewSinglyLinkedList[int]())
 	})
 }
+
+func TestDoublyLinkedList(t *testing.T) {
+	t.Run("testLinkedListInsert", func(t *testing.T) {
+		testLinkedListInsert(t, NewDoublyLinkedList[int]())
+	})
+
+	t.Run("testLinkedListDelete", func(t *testing.T) {
+		testLinkedListDelete(t, NewDoublyLinkedList[int]())
+	})
+}
+
+func TestCircularLinkedList(t *testing.T) {
+	t.Run("testLinkedListInsert", func(t *testing.T) {
+		testLinkedListInsert(t, NewCircularLinkedList[int]())
+	})
+
+	t.Run("testLinkedListDelete", func(t *testing.T) {
+		testLinkedListDelete(t, NewCircularLinkedList[int]())
+	})
+}
