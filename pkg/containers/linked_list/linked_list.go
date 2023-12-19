@@ -8,20 +8,25 @@ In a linked lists, elements are not stored one after another.
 */
 type LinkedList[T any] interface {
 	//Insert the specified item at the specified position
-	Insert(index int, item T)
+	Insert(index int, data T)
 	//Get item from the specified position
-	Get(index int) T
+	Get(index int) LinkedListNode[T]
 	//Delete item at the specified position
-	Delete(index int) T
+	Delete(index int) LinkedListNode[T]
 	//Get list length
 	Length() int
 
 	//Insert the specified item at the end of the list
-	Append(item T)
+	Append(data T)
 	//Delete item from the end of the list
-	Pop() T
+	Pop() LinkedListNode[T]
 	//Get first item in the list
-	First() T
+	First() LinkedListNode[T]
 	//Get last item in the list
-	Last() T
+	Last() LinkedListNode[T]
+}
+
+type LinkedListNode[T any] interface {
+	Data() T
+	Next() *LinkedListNode[T]
 }

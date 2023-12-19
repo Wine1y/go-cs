@@ -5,76 +5,77 @@ import (
 	"testing"
 )
 
-func testLinkedListInsert(t *testing.T, list LinkedList[int]) {
-	list.Append(1)
-	list.Append(2)
-	list.Append(3)
-
-	tu.AssertEqualsNamed(t, "length", list.Length(), 3)
-	tu.AssertEqualsNamed(t, "first item", list.First(), 1)
-	tu.AssertEqualsNamed(t, "last item", list.Last(), 3)
-
-	list.Insert(0, 10)
-	tu.AssertEqualsNamed(t, "length", list.Length(), 4)
-	tu.AssertEqualsNamed(t, "item at index 0", list.Get(0), 10)
-
-	list.Insert(4, 20)
-	tu.AssertEqualsNamed(t, "length", list.Length(), 5)
-	tu.AssertEqualsNamed(t, "item at index 4", list.Get(4), 20)
-
-	list.Insert(2, 30)
-	tu.AssertEqualsNamed(t, "length", list.Length(), 6)
-	tu.AssertEqualsNamed(t, "item at index 2", list.Get(2), 30)
-}
-
-func testLinkedListDelete(t *testing.T, list LinkedList[int]) {
-	list.Append(1)
-	list.Append(2)
-	list.Append(3)
-
-	tu.AssertEqualsNamed(t, "length", list.Length(), 3)
-	tu.AssertEqualsNamed(t, "first item", list.First(), 1)
-	tu.AssertEqualsNamed(t, "last item", list.Last(), 3)
-
-	list.Delete(1)
-	tu.AssertEqualsNamed(t, "length", list.Length(), 2)
-	tu.AssertEqualsNamed(t, "first item", list.First(), 1)
-	tu.AssertEqualsNamed(t, "last item", list.Last(), 3)
-
-	list.Pop()
-	tu.AssertEqualsNamed(t, "length", list.Length(), 1)
-	tu.AssertEqualsNamed(t, "last item", list.Last(), 1)
-
-	list.Pop()
-	tu.AssertEqualsNamed(t, "length", list.Length(), 0)
-}
-
 func TestSinglyLinkedList(t *testing.T) {
-	t.Run("testLinkedListInsert", func(t *testing.T) {
-		testLinkedListInsert(t, NewSinglyLinkedList[int]())
-	})
+	list := NewSinglyLinkedList[int]()
 
-	t.Run("testLinkedListDelete", func(t *testing.T) {
-		testLinkedListDelete(t, NewSinglyLinkedList[int]())
-	})
+	list.Append(1)
+	list.Append(2)
+	list.Append(3)
+
+	deleted := list.Delete(1)
+	tu.AssertEqualsNamed(t, "SLL delete", deleted.Data(), 2)
+	list.Insert(1, 2)
+
+	list.Pop()
+	list.Append(3)
+
+	expected := [3]int{1, 2, 3}
+	i := 0
+	for node := list.First(); node != nil; node = node.Next() {
+		tu.AssertEqualsNamed(t, "SLL iterate", node.Data(), expected[i])
+		i++
+	}
 }
 
 func TestDoublyLinkedList(t *testing.T) {
-	t.Run("testLinkedListInsert", func(t *testing.T) {
-		testLinkedListInsert(t, NewDoublyLinkedList[int]())
-	})
+	list := NewDoublyLinkedList[int]()
 
-	t.Run("testLinkedListDelete", func(t *testing.T) {
-		testLinkedListDelete(t, NewDoublyLinkedList[int]())
-	})
+	list.Append(1)
+	list.Append(2)
+	list.Append(3)
+
+	deleted := list.Delete(1)
+	tu.AssertEqualsNamed(t, "DLL delete", deleted.Data(), 2)
+	list.Insert(1, 2)
+
+	list.Pop()
+	list.Append(3)
+
+	expected := [3]int{1, 2, 3}
+	i := 0
+	for node := list.First(); node != nil; node = node.Next() {
+		tu.AssertEqualsNamed(t, "DLL iterate forwards", node.Data(), expected[i])
+		i++
+	}
+
+	i = list.Length() - 1
+	for node := list.Last(); node != nil; node = node.Previous() {
+		tu.AssertEqualsNamed(t, "DLL iterate backwards", node.Data(), expected[i])
+		i--
+	}
 }
 
 func TestCircularLinkedList(t *testing.T) {
-	t.Run("testLinkedListInsert", func(t *testing.T) {
-		testLinkedListInsert(t, NewCircularLinkedList[int]())
-	})
+	list := NewCircularLinkedList[int]()
 
-	t.Run("testLinkedListDelete", func(t *testing.T) {
-		testLinkedListDelete(t, NewCircularLinkedList[int]())
-	})
+	list.Append(1)
+	tu.AssertEqualsNamed(t, "CLL single node points to itself", list.First().Next(), list.First())
+	list.Append(2)
+	list.Append(3)
+
+	deleted := list.Delete(1)
+	tu.AssertEqualsNamed(t, "CLL delete", deleted.Data(), 2)
+	list.Insert(1, 2)
+
+	list.Pop()
+	list.Append(3)
+
+	expected := [3]int{1, 2, 3}
+	node := list.First()
+	for i := 0; i < len(expected); i++ {
+		tu.AssertEqualsNamed(t, "CLL iterate", node.Data(), expected[i])
+		node = node.Next()
+	}
+
+	tu.AssertEqualsNamed(t, "CLL last node points to first", list.Last().Next(), list.First())
 }

@@ -2,10 +2,22 @@ package linkedlist
 
 import "fmt"
 
-type doublyLinkedListNode[T any] struct {
+type DoublyLinkedListNode[T any] struct {
 	data     T
-	previous *doublyLinkedListNode[T]
-	next     *doublyLinkedListNode[T]
+	previous *DoublyLinkedListNode[T]
+	next     *DoublyLinkedListNode[T]
+}
+
+func (node DoublyLinkedListNode[T]) Data() T {
+	return node.data
+}
+
+func (node DoublyLinkedListNode[T]) Next() *DoublyLinkedListNode[T] {
+	return node.next
+}
+
+func (node DoublyLinkedListNode[T]) Previous() *DoublyLinkedListNode[T] {
+	return node.previous
 }
 
 /*
@@ -13,8 +25,8 @@ In a doubly linked list, each element have a pointer to the previous and to the 
 Doubly linked lists can be traversed backwards but require more memory due to one more pointer.
 */
 type DoublyLinkedList[T any] struct {
-	first  *doublyLinkedListNode[T]
-	last   *doublyLinkedListNode[T]
+	first  *DoublyLinkedListNode[T]
+	last   *DoublyLinkedListNode[T]
 	length int
 }
 
@@ -26,8 +38,8 @@ func NewDoublyLinkedList[T any]() *DoublyLinkedList[T] {
 	}
 }
 
-func (list *DoublyLinkedList[T]) Insert(index int, item T) {
-	node := doublyLinkedListNode[T]{data: item, previous: nil, next: nil}
+func (list *DoublyLinkedList[T]) Insert(index int, data T) {
+	node := DoublyLinkedListNode[T]{data: data, previous: nil, next: nil}
 	if index == 0 {
 		if list.first != nil {
 			node.next = list.first
@@ -35,7 +47,7 @@ func (list *DoublyLinkedList[T]) Insert(index int, item T) {
 		}
 		list.first = &node
 	} else {
-		previous := list.getNode(index - 1)
+		previous := list.Get(index - 1)
 
 		node.next = previous.next
 		node.previous = previous
@@ -51,64 +63,14 @@ func (list *DoublyLinkedList[T]) Insert(index int, item T) {
 	list.length++
 }
 
-func (list DoublyLinkedList[T]) Get(index int) T {
-	return list.getNode(index).data
-}
-
-func (list *DoublyLinkedList[T]) Delete(index int) T {
-	if index < 0 || index >= list.length {
-		panic(fmt.Sprintf("List index out of range - %v", index))
-	}
-	var node *doublyLinkedListNode[T]
-	if index == 0 {
-		node = list.first
-		list.first = node.next
-		if list.first != nil {
-			list.first.previous = nil
-		}
-	} else {
-		previous := list.getNode(index - 1)
-		node = previous.next
-		previous.next = node.next
-		if node.next != nil {
-			node.next.previous = previous
-		}
-	}
-	if index == list.length-1 {
-		list.last = node.previous
-	}
-	list.length--
-	return node.data
-}
-
-func (list DoublyLinkedList[T]) Length() int {
-	return list.length
-}
-
-func (list *DoublyLinkedList[T]) Append(item T) {
-	list.Insert(list.Length(), item)
-}
-
-func (list *DoublyLinkedList[T]) Pop() T {
-	return list.Delete(list.Length() - 1)
-}
-
-func (list DoublyLinkedList[T]) First() T {
-	return list.Get(0)
-}
-
-func (list DoublyLinkedList[T]) Last() T {
-	return list.Get(list.Length() - 1)
-}
-
-func (list DoublyLinkedList[T]) getNode(index int) *doublyLinkedListNode[T] {
+func (list DoublyLinkedList[T]) Get(index int) *DoublyLinkedListNode[T] {
 	if index < 0 || index >= list.length {
 		panic(fmt.Sprintf("List index out of range - %v", index))
 	}
 
 	var (
 		i         int
-		node      *doublyLinkedListNode[T]
+		node      *DoublyLinkedListNode[T]
 		backwards bool
 	)
 
@@ -134,4 +96,50 @@ func (list DoublyLinkedList[T]) getNode(index int) *doublyLinkedListNode[T] {
 			i++
 		}
 	}
+}
+
+func (list *DoublyLinkedList[T]) Delete(index int) *DoublyLinkedListNode[T] {
+	if index < 0 || index >= list.length {
+		panic(fmt.Sprintf("List index out of range - %v", index))
+	}
+	var node *DoublyLinkedListNode[T]
+	if index == 0 {
+		node = list.first
+		list.first = node.next
+		if list.first != nil {
+			list.first.previous = nil
+		}
+	} else {
+		previous := list.Get(index - 1)
+		node = previous.next
+		previous.next = node.next
+		if node.next != nil {
+			node.next.previous = previous
+		}
+	}
+	if index == list.length-1 {
+		list.last = node.previous
+	}
+	list.length--
+	return node
+}
+
+func (list DoublyLinkedList[T]) Length() int {
+	return list.length
+}
+
+func (list *DoublyLinkedList[T]) Append(data T) {
+	list.Insert(list.Length(), data)
+}
+
+func (list *DoublyLinkedList[T]) Pop() *DoublyLinkedListNode[T] {
+	return list.Delete(list.Length() - 1)
+}
+
+func (list DoublyLinkedList[T]) First() *DoublyLinkedListNode[T] {
+	return list.Get(0)
+}
+
+func (list DoublyLinkedList[T]) Last() *DoublyLinkedListNode[T] {
+	return list.Get(list.Length() - 1)
 }
