@@ -1,8 +1,9 @@
 package linkedlist
 
 import (
-	tu "Wine1y/go-cs/internal/testing_utils"
 	"testing"
+
+	tu "github.com/Wine1y/go-cs/internal/testing_utils"
 )
 
 func TestSinglyLinkedList(t *testing.T) {
