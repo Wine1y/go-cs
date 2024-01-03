@@ -1,5 +1,9 @@
 package queue
 
+/*
+Circular queues use circular arrays to store items.
+CircularArrayQueue have fixed size and panics at overflow.
+*/
 type CircularArrayQueue[T any] struct {
 	array []T
 	front int
