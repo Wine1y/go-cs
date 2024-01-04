@@ -3,8 +3,8 @@ package linkedlist
 /*
 Linked lists are used to store data, they can't be accessed in a constant time like arrays,
 but they can be expanded in a constant time, which makes them perfect for a highly
-dynamic data that grows and shrinks more often the it's accessed.
-In a linked lists, elements are not stored one after another.
+dynamic data that grows and shrinks more often than it's accessed.
+In linked lists elements are not stored one after another.
 */
 type LinkedList[T any] interface {
 	//Insert the specified item at the specified position
