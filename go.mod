@@ -1,3 +1,3 @@
 module github.com/Wine1y/go-cs
 
-go 1.19
+go 1.21.5

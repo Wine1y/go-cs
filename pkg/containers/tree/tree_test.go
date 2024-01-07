@@ -58,3 +58,44 @@ func TestBinaryTree(t *testing.T) {
 		tu.AssertEqualsNamed(t, "Tree node returns correct children", rootChilds[i].Data(), childExpValues[i])
 	}
 }
+
+func TestBinarySearchTree(t *testing.T) {
+	tu.AssertEqualsNamed(t, "Empty tree height == 0", BinarySearchTree[int]{}.Height(), 0)
+
+	tree := NewBinarySearchTree[int](10)
+	tu.AssertEqualsNamed(t, "Tree with only root node height == 1", tree.Height(), 1)
+
+	left := tree.AppendNode(5)
+	tree.AppendNode(20)
+	tu.AssertEqualsNamed(t, "Tree with appended nodes height is right", tree.Height(), 2)
+
+	tu.AssertEqualsNamed(t, "AppendNode appends smaller nodes to the left subtree", tree.Root().Left().Data(), 5)
+	tu.AssertEqualsNamed(t, "AppendNode appends greater nodes to the right subtree", tree.Root().Right().Data(), 20)
+
+	tree.AppendNode(7)
+	tu.AssertEqualsNamed(t, "AppendNode appends subnodes correctly", left.Right().Data(), 7)
+	tu.AssertEqualsNamed(t, "Tree with appended subnodes height is right", tree.Height(), 3)
+
+	tu.AssertEqualsNamed(t, "FindNode returns node when it exists", tree.FindNode(7).Data(), 7)
+	tree.DeleteNode(7)
+	tu.AssertEqualsNamed(t, "FindNode returns nil for non-existing nodes", tree.FindNode(7), nil)
+
+	rootChilds := tree.Root().Children()
+	childExpValues := []int{5, 20}
+	tu.AssertEqualsNamed(t, "Node children has correct length", len(rootChilds), len(childExpValues))
+
+	for i := range rootChilds {
+		tu.AssertEqualsNamed(t, "Tree node returns correct children", rootChilds[i].Data(), childExpValues[i])
+	}
+
+	tree.DeleteNode(10)
+	tu.AssertEqualsNamed(t, "DeleteNode deletes node with 2 child nodes correctly", tree.Root().Data(), 5)
+	tu.AssertEqualsNamed(t, "DeleteNode deletes node with 2 child nodes correctly", tree.Root().Right().Data(), 20)
+
+	tree.DeleteNode(5)
+	tu.AssertEqualsNamed(t, "DeleteNode deletes node with 1 child node correctly", tree.Root().Data(), 20)
+
+	tree.DeleteNode(20)
+	tu.AssertEqualsNamed(t, "DeleteNode deletes leaf root node correctly", tree.Root(), nil)
+	tu.AssertEqualsNamed(t, "DeleteNode deletes leaf root node correctly", tree.Height(), 0)
+}
