@@ -1,5 +1,10 @@
 package tree
 
+import (
+	"github.com/Wine1y/go-cs/pkg/containers/stack"
+	"github.com/Wine1y/go-cs/pkg/utils"
+)
+
 type BinaryTreeNode[T any] struct {
 	data  T
 	left  *BinaryTreeNode[T]
@@ -103,4 +108,111 @@ func (tree BinaryTree[T]) Height() int {
 		return 0
 	}
 	return tree.root.Height()
+}
+
+func (tree BinaryTree[T]) PreOrderIterator() utils.Iterator[*BinaryTreeNode[T]] {
+	iterator := binaryTreePreOrderIterator[T]{
+		binaryTreeIterator: newBinaryTreeIterator[T](tree.Root()),
+	}
+	iterator.stack.Push(tree.Root())
+	return &iterator
+}
+
+func (tree BinaryTree[T]) InOrderIterator() utils.Iterator[*BinaryTreeNode[T]] {
+	iterator := binaryTreeInOrderIterator[T]{
+		binaryTreeIterator: newBinaryTreeIterator[T](tree.Root()),
+	}
+	return &iterator
+}
+
+func (tree BinaryTree[T]) PostOrderIterator() utils.Iterator[*BinaryTreeNode[T]] {
+	iterator := binaryTreePostOrderIterator[T]{
+		binaryTreeIterator: newBinaryTreeIterator[T](tree.Root()),
+	}
+	iterator.stack.Push(tree.Root())
+	return &iterator
+}
+
+type binaryTreeIterator[T any] struct {
+	stack stack.LinkedListStack[*BinaryTreeNode[T]]
+	head  *BinaryTreeNode[T]
+}
+
+type binaryTreePreOrderIterator[T any] struct {
+	binaryTreeIterator[T]
+}
+
+type binaryTreeInOrderIterator[T any] struct {
+	binaryTreeIterator[T]
+}
+
+type binaryTreePostOrderIterator[T any] struct {
+	binaryTreeIterator[T]
+}
+
+func newBinaryTreeIterator[T any](head *BinaryTreeNode[T]) binaryTreeIterator[T] {
+	stack := stack.NewLinkedListStack[*BinaryTreeNode[T]]()
+	return binaryTreeIterator[T]{
+		stack: stack,
+		head:  head,
+	}
+}
+
+func (iterator binaryTreeIterator[T]) Ended() bool {
+	return iterator.stack.Empty()
+}
+
+func (iterator binaryTreeInOrderIterator[T]) Ended() bool {
+	return iterator.stack.Empty() && iterator.head == nil
+}
+
+func (iterator *binaryTreePreOrderIterator[T]) Next() *BinaryTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	node := iterator.stack.Pop()
+	if node.Right() != nil {
+		iterator.stack.Push(node.Right())
+	}
+	if node.Left() != nil {
+		iterator.stack.Push(node.Left())
+	}
+	return node
+}
+
+func (iterator *binaryTreeInOrderIterator[T]) Next() *BinaryTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	for {
+		if iterator.head == nil {
+			node := iterator.stack.Pop()
+			iterator.head = node.Right()
+			return node
+		}
+		iterator.stack.Push(iterator.head)
+		iterator.head = iterator.head.Left()
+	}
+}
+
+func (iterator *binaryTreePostOrderIterator[T]) Next() *BinaryTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	for {
+		node := iterator.stack.Top()
+		processed := node.Right() == iterator.head || node.Left() == iterator.head
+		leaf := node.Right() == nil && node.Left() == nil
+		if leaf || processed {
+			iterator.stack.Pop()
+			iterator.head = node
+			return node
+		}
+		if node.Right() != nil {
+			iterator.stack.Push(node.Right())
+		}
+		if node.Left() != nil {
+			iterator.stack.Push(node.Left())
+		}
+	}
 }

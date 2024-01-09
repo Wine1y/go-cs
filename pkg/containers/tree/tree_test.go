@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	tu "github.com/Wine1y/go-cs/internal/testing_utils"
+	"github.com/Wine1y/go-cs/pkg/utils"
 )
 
 func TestGenericTree(t *testing.T) {
@@ -57,6 +58,20 @@ func TestBinaryTree(t *testing.T) {
 	for i := range rootChilds {
 		tu.AssertEqualsNamed(t, "Tree node returns correct children", rootChilds[i].Data(), childExpValues[i])
 	}
+
+	preOrderExp, preOrder := []int{1, 2, 4, 3}, utils.CollectIterator(tree.PreOrderIterator())
+	inOrderExp, inOrder := []int{4, 2, 1, 3}, utils.CollectIterator(tree.InOrderIterator())
+	postOrderExp, postOrder := []int{4, 2, 3, 1}, utils.CollectIterator(tree.PostOrderIterator())
+
+	for i, node := range preOrder {
+		tu.AssertEqualsNamed(t, "PreOrder iterator yields correct values", node.Data(), preOrderExp[i])
+	}
+	for i, node := range inOrder {
+		tu.AssertEqualsNamed(t, "InOrder iterator yields correct values", node.Data(), inOrderExp[i])
+	}
+	for i, node := range postOrder {
+		tu.AssertEqualsNamed(t, "PostOrder iterator yields correct values", node.Data(), postOrderExp[i])
+	}
 }
 
 func TestBinarySearchTree(t *testing.T) {
@@ -86,6 +101,20 @@ func TestBinarySearchTree(t *testing.T) {
 
 	for i := range rootChilds {
 		tu.AssertEqualsNamed(t, "Tree node returns correct children", rootChilds[i].Data(), childExpValues[i])
+	}
+
+	preOrderExp, preOrder := []int{10, 5, 20}, utils.CollectIterator(tree.PreOrderIterator())
+	inOrderExp, inOrder := []int{5, 10, 20}, utils.CollectIterator(tree.InOrderIterator())
+	postOrderExp, postOrder := []int{5, 20, 10}, utils.CollectIterator(tree.PostOrderIterator())
+
+	for i, node := range preOrder {
+		tu.AssertEqualsNamed(t, "PreOrder iterator yields correct values", node.Data(), preOrderExp[i])
+	}
+	for i, node := range inOrder {
+		tu.AssertEqualsNamed(t, "InOrder iterator yields correct values", node.Data(), inOrderExp[i])
+	}
+	for i, node := range postOrder {
+		tu.AssertEqualsNamed(t, "PostOrder iterator yields correct values", node.Data(), postOrderExp[i])
 	}
 
 	tree.DeleteNode(10)

@@ -1,6 +1,11 @@
 package tree
 
-import "cmp"
+import (
+	"cmp"
+
+	"github.com/Wine1y/go-cs/pkg/containers/stack"
+	"github.com/Wine1y/go-cs/pkg/utils"
+)
 
 type BinarySearchTreeNode[T cmp.Ordered] struct {
 	data  T
@@ -199,4 +204,111 @@ func (tree BinarySearchTree[T]) FindMax() *BinarySearchTreeNode[T] {
 		return nil
 	}
 	return tree.Root().FindMax()
+}
+
+func (tree BinarySearchTree[T]) PreOrderIterator() utils.Iterator[*BinarySearchTreeNode[T]] {
+	iterator := binarySearchTreePreOrderIterator[T]{
+		binarySearchTreeIterator: newBinarySearchTreeIterator[T](tree.Root()),
+	}
+	iterator.stack.Push(tree.Root())
+	return &iterator
+}
+
+func (tree BinarySearchTree[T]) InOrderIterator() utils.Iterator[*BinarySearchTreeNode[T]] {
+	iterator := binarySearchTreeInOrderIterator[T]{
+		binarySearchTreeIterator: newBinarySearchTreeIterator[T](tree.Root()),
+	}
+	return &iterator
+}
+
+func (tree BinarySearchTree[T]) PostOrderIterator() utils.Iterator[*BinarySearchTreeNode[T]] {
+	iterator := binarySearchTreePostOrderIterator[T]{
+		binarySearchTreeIterator: newBinarySearchTreeIterator[T](tree.Root()),
+	}
+	iterator.stack.Push(tree.Root())
+	return &iterator
+}
+
+type binarySearchTreeIterator[T cmp.Ordered] struct {
+	stack stack.LinkedListStack[*BinarySearchTreeNode[T]]
+	head  *BinarySearchTreeNode[T]
+}
+
+type binarySearchTreePreOrderIterator[T cmp.Ordered] struct {
+	binarySearchTreeIterator[T]
+}
+
+type binarySearchTreeInOrderIterator[T cmp.Ordered] struct {
+	binarySearchTreeIterator[T]
+}
+
+type binarySearchTreePostOrderIterator[T cmp.Ordered] struct {
+	binarySearchTreeIterator[T]
+}
+
+func newBinarySearchTreeIterator[T cmp.Ordered](head *BinarySearchTreeNode[T]) binarySearchTreeIterator[T] {
+	stack := stack.NewLinkedListStack[*BinarySearchTreeNode[T]]()
+	return binarySearchTreeIterator[T]{
+		stack: stack,
+		head:  head,
+	}
+}
+
+func (iterator binarySearchTreeIterator[T]) Ended() bool {
+	return iterator.stack.Empty()
+}
+
+func (iterator binarySearchTreeInOrderIterator[T]) Ended() bool {
+	return iterator.stack.Empty() && iterator.head == nil
+}
+
+func (iterator *binarySearchTreePreOrderIterator[T]) Next() *BinarySearchTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	node := iterator.stack.Pop()
+	if node.Right() != nil {
+		iterator.stack.Push(node.Right())
+	}
+	if node.Left() != nil {
+		iterator.stack.Push(node.Left())
+	}
+	return node
+}
+
+func (iterator *binarySearchTreeInOrderIterator[T]) Next() *BinarySearchTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	for {
+		if iterator.head == nil {
+			node := iterator.stack.Pop()
+			iterator.head = node.Right()
+			return node
+		}
+		iterator.stack.Push(iterator.head)
+		iterator.head = iterator.head.Left()
+	}
+}
+
+func (iterator *binarySearchTreePostOrderIterator[T]) Next() *BinarySearchTreeNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	for {
+		node := iterator.stack.Top()
+		processed := node.Right() == iterator.head || node.Left() == iterator.head
+		leaf := node.Right() == nil && node.Left() == nil
+		if leaf || processed {
+			iterator.stack.Pop()
+			iterator.head = node
+			return node
+		}
+		if node.Right() != nil {
+			iterator.stack.Push(node.Right())
+		}
+		if node.Left() != nil {
+			iterator.stack.Push(node.Left())
+		}
+	}
 }
