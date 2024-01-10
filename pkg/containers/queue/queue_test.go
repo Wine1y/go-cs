@@ -36,7 +36,7 @@ func TestCircularArrayQueue(t *testing.T) {
 		func() { queue.EnQueue(4) },
 	)
 
-	tu.AssertEqualsNamed(t, "CircularArrayQueue dequeue returns right value", queue.DeQueue(), 1)
+	queue.DeQueue()
 	tu.AssertEqualsNamed(t, "CircularArrayQueue returns right front value", queue.Front(), 2)
 	tu.AssertEqualsNamed(t, "CircularArrayQueue length decreases when dequeued", queue.Length(), 2)
 
@@ -44,6 +44,11 @@ func TestCircularArrayQueue(t *testing.T) {
 	queue.EnQueue(10)
 	queue.EnQueue(20)
 	tu.AssertEqualsNamed(t, "CircularArrayQueue returns right length when front > end", queue.Length(), 3)
+
+	expValues := []int{3, 10, 20}
+	for _, expValue := range expValues {
+		tu.AssertEqualsNamed(t, "CircularArrayQueue dequeue returns right value", queue.DeQueue(), expValue)
+	}
 }
 
 func TestCircularSliceQueue(t *testing.T) {
@@ -73,7 +78,7 @@ func TestCircularSliceQueue(t *testing.T) {
 	queue.EnQueue(4)
 	tu.AssertEqualsNamed(t, "CircularSliceQueue grows when overflowed", queue.Length(), 4)
 
-	tu.AssertEqualsNamed(t, "CircularSliceQueue dequeue returns right value", queue.DeQueue(), 1)
+	queue.DeQueue()
 	tu.AssertEqualsNamed(t, "CircularSliceQueue returns right front value", queue.Front(), 2)
 	tu.AssertEqualsNamed(t, "CircularSliceQueue length decreases when dequeued", queue.Length(), 3)
 
@@ -82,6 +87,11 @@ func TestCircularSliceQueue(t *testing.T) {
 	queue.EnQueue(10)
 	queue.EnQueue(20)
 	tu.AssertEqualsNamed(t, "CircularSliceQueue returns right length when front > end", queue.Length(), 3)
+
+	expValues := []int{4, 10, 20}
+	for _, expValue := range expValues {
+		tu.AssertEqualsNamed(t, "CircularSliceQueue dequeue returns right value", queue.DeQueue(), expValue)
+	}
 }
 
 func TestLinkedListQueue(t *testing.T) {
@@ -108,7 +118,7 @@ func TestLinkedListQueue(t *testing.T) {
 	tu.AssertEqualsNamed(t, "LinkedListQueue is not empty when enqued", queue.Empty(), false)
 	tu.AssertEqualsNamed(t, "LinkedListQueue can't be full", queue.Full(), false)
 
-	tu.AssertEqualsNamed(t, "LinkedListQueue dequeue returns right value", queue.DeQueue(), 1)
+	queue.DeQueue()
 	tu.AssertEqualsNamed(t, "LinkedListQueue returns right front value", queue.Front(), 2)
 	tu.AssertEqualsNamed(t, "LinkedListQueue length decreases when dequeued", queue.Length(), 2)
 
@@ -116,4 +126,9 @@ func TestLinkedListQueue(t *testing.T) {
 	queue.EnQueue(10)
 	queue.EnQueue(20)
 	tu.AssertEqualsNamed(t, "LinkedListQueue returns right length when front > end", queue.Length(), 3)
+
+	expValues := []int{3, 10, 20}
+	for _, expValue := range expValues {
+		tu.AssertEqualsNamed(t, "LinkedListQueue dequeue returns right value", queue.DeQueue(), expValue)
+	}
 }

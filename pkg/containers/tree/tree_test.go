@@ -13,9 +13,9 @@ func TestGenericTree(t *testing.T) {
 	tree := NewGenericTree[int](1)
 	tu.AssertEqualsNamed(t, "Tree with only root node height == 1", tree.Height(), 1)
 
-	tree.Root().AppendNode(2)
+	subNode := tree.Root().AppendNode(2)
 	tree.Root().AppendNode(3)
-	subNode := tree.Root().AppendNode(4)
+	tree.Root().AppendNode(4)
 	tu.AssertEqualsNamed(t, "Tree with appended nodes height is right", tree.Height(), 2)
 
 	subNode.AppendNode(5)
@@ -27,6 +27,16 @@ func TestGenericTree(t *testing.T) {
 
 	for i := range rootChilds {
 		tu.AssertEqualsNamed(t, "Tree node returns correct children", rootChilds[i].Data(), childExpValues[i])
+	}
+
+	DFSExp, DFS := []int{1, 2, 5, 3, 4}, utils.CollectIterator(tree.DFSIterator())
+	BFSExp, BFS := []int{1, 2, 3, 4, 5}, utils.CollectIterator(tree.BFSIterator())
+
+	for i, node := range DFS {
+		tu.AssertEqualsNamed(t, "PreOrder iterator yields correct values", node.Data(), DFSExp[i])
+	}
+	for i, node := range BFS {
+		tu.AssertEqualsNamed(t, "PreOrder iterator yields correct values", node.Data(), BFSExp[i])
 	}
 }
 

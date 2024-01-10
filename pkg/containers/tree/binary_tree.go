@@ -23,13 +23,13 @@ func (node BinaryTreeNode[T]) Data() T {
 	return node.data
 }
 
-func (node BinaryTreeNode[T]) Children() []BinaryTreeNode[T] {
-	children := make([]BinaryTreeNode[T], 0, 2)
+func (node BinaryTreeNode[T]) Children() []*BinaryTreeNode[T] {
+	children := make([]*BinaryTreeNode[T], 0, 2)
 	if node.left != nil {
-		children = append(children, *node.left)
+		children = append(children, node.left)
 	}
 	if node.right != nil {
-		children = append(children, *node.right)
+		children = append(children, node.right)
 	}
 	return children
 }
@@ -134,7 +134,7 @@ func (tree BinaryTree[T]) PostOrderIterator() utils.Iterator[*BinaryTreeNode[T]]
 }
 
 type binaryTreeIterator[T any] struct {
-	stack stack.LinkedListStack[*BinaryTreeNode[T]]
+	stack stack.Stack[*BinaryTreeNode[T]]
 	head  *BinaryTreeNode[T]
 }
 
@@ -153,7 +153,7 @@ type binaryTreePostOrderIterator[T any] struct {
 func newBinaryTreeIterator[T any](head *BinaryTreeNode[T]) binaryTreeIterator[T] {
 	stack := stack.NewLinkedListStack[*BinaryTreeNode[T]]()
 	return binaryTreeIterator[T]{
-		stack: stack,
+		stack: &stack,
 		head:  head,
 	}
 }

@@ -15,7 +15,7 @@ type Tree[T any] interface {
 
 type TreeNode[T any] interface {
 	Data() T
-	Children() []TreeNode[T]
+	Children() []*TreeNode[T]
 	Height() int
 	AppendNode(data T) TreeNode[T]
 }

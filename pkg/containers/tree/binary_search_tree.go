@@ -25,13 +25,13 @@ func (node BinarySearchTreeNode[T]) Data() T {
 	return node.data
 }
 
-func (node BinarySearchTreeNode[T]) Children() []BinarySearchTreeNode[T] {
-	children := make([]BinarySearchTreeNode[T], 0, 2)
+func (node BinarySearchTreeNode[T]) Children() []*BinarySearchTreeNode[T] {
+	children := make([]*BinarySearchTreeNode[T], 0, 2)
 	if node.left != nil {
-		children = append(children, *node.left)
+		children = append(children, node.left)
 	}
 	if node.right != nil {
-		children = append(children, *node.right)
+		children = append(children, node.right)
 	}
 	return children
 }
@@ -117,7 +117,7 @@ func (node *BinarySearchTreeNode[T]) DeleteNode(data T) *BinarySearchTreeNode[T]
 			node.data = leftLargest.Data()
 			node.left = node.Left().DeleteNode(leftLargest.Data())
 		case 1:
-			return &children[0]
+			return children[0]
 		case 0:
 			return nil
 		}
@@ -230,7 +230,7 @@ func (tree BinarySearchTree[T]) PostOrderIterator() utils.Iterator[*BinarySearch
 }
 
 type binarySearchTreeIterator[T cmp.Ordered] struct {
-	stack stack.LinkedListStack[*BinarySearchTreeNode[T]]
+	stack stack.Stack[*BinarySearchTreeNode[T]]
 	head  *BinarySearchTreeNode[T]
 }
 
@@ -249,7 +249,7 @@ type binarySearchTreePostOrderIterator[T cmp.Ordered] struct {
 func newBinarySearchTreeIterator[T cmp.Ordered](head *BinarySearchTreeNode[T]) binarySearchTreeIterator[T] {
 	stack := stack.NewLinkedListStack[*BinarySearchTreeNode[T]]()
 	return binarySearchTreeIterator[T]{
-		stack: stack,
+		stack: &stack,
 		head:  head,
 	}
 }
