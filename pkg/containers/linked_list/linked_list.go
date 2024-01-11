@@ -1,5 +1,9 @@
 package linkedlist
 
+import (
+	"reflect"
+)
+
 /*
 Linked lists are used to store data, they can't be accessed in a constant time like arrays,
 but they can be expanded in a constant time, which makes them perfect for a highly
@@ -28,5 +32,28 @@ type LinkedList[T any] interface {
 
 type LinkedListNode[T any] interface {
 	Data() T
-	Next() *LinkedListNode[T]
+	Next() LinkedListNode[T]
+}
+
+type linkedListIterator[T any] struct {
+	node LinkedListNode[T]
+}
+
+func newLinkedListIterator[T any](start LinkedListNode[T]) linkedListIterator[T] {
+	return linkedListIterator[T]{
+		node: start,
+	}
+}
+
+func (iterator linkedListIterator[T]) Ended() bool {
+	return iterator.node == nil || reflect.ValueOf(iterator.node).IsNil()
+}
+
+func (iterator *linkedListIterator[T]) Next() LinkedListNode[T] {
+	if iterator.Ended() {
+		panic("Iterator has ended")
+	}
+	node := iterator.node
+	iterator.node = node.Next()
+	return node
 }

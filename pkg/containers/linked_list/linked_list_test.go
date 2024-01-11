@@ -22,10 +22,11 @@ func TestSinglyLinkedList(t *testing.T) {
 
 	expected := [3]int{1, 2, 3}
 	i := 0
-	for node := list.First(); node != nil; node = node.Next() {
-		tu.AssertEqualsNamed(t, "SLL iterate", node.Data(), expected[i])
+	for iterator := list.Iterator(); !iterator.Ended(); {
+		tu.AssertEqualsNamed(t, "SLL iterate", iterator.Next().Data(), expected[i])
 		i++
 	}
+
 }
 
 func TestDoublyLinkedList(t *testing.T) {
@@ -44,14 +45,14 @@ func TestDoublyLinkedList(t *testing.T) {
 
 	expected := [3]int{1, 2, 3}
 	i := 0
-	for node := list.First(); node != nil; node = node.Next() {
-		tu.AssertEqualsNamed(t, "DLL iterate forwards", node.Data(), expected[i])
+	for iterator := list.Iterator(); !iterator.Ended(); {
+		tu.AssertEqualsNamed(t, "DLL iterate forwards", iterator.Next().Data(), expected[i])
 		i++
 	}
 
 	i = list.Length() - 1
-	for node := list.Last(); node != nil; node = node.Previous() {
-		tu.AssertEqualsNamed(t, "DLL iterate backwards", node.Data(), expected[i])
+	for iterator := list.BackwardsIterator(); !iterator.Ended(); {
+		tu.AssertEqualsNamed(t, "DLL iterate backwards", iterator.Next().Data(), expected[i])
 		i--
 	}
 }
@@ -71,12 +72,9 @@ func TestCircularLinkedList(t *testing.T) {
 	list.Pop()
 	list.Append(3)
 
-	expected := [3]int{1, 2, 3}
-	node := list.First()
+	expected := [6]int{1, 2, 3, 1, 2, 3}
+	iterator := list.Iterator()
 	for i := 0; i < len(expected); i++ {
-		tu.AssertEqualsNamed(t, "CLL iterate", node.Data(), expected[i])
-		node = node.Next()
+		tu.AssertEqualsNamed(t, "CLL iterate", iterator.Next().Data(), expected[i])
 	}
-
-	tu.AssertEqualsNamed(t, "CLL last node points to first", list.Last().Next(), list.First())
 }
