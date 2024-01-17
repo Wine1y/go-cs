@@ -2,6 +2,8 @@ package linkedlist
 
 import (
 	"reflect"
+
+	"github.com/Wine1y/go-cs/pkg/utils"
 )
 
 /*
@@ -28,6 +30,8 @@ type LinkedList[T any] interface {
 	First() LinkedListNode[T]
 	//Get last item in the list
 	Last() LinkedListNode[T]
+	//Return list iterator
+	Iterator() utils.Iterator[LinkedListNode[T]]
 }
 
 type LinkedListNode[T any] interface {
