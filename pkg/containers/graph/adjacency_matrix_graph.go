@@ -1,6 +1,10 @@
 package graph
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/Wine1y/go-cs/pkg/utils"
+)
 
 type adjacencyMatrixGraphImpl[T comparable, V any] struct {
 	valueToVertexIndex map[T]int
@@ -86,6 +90,15 @@ func (graph AdjacencyMatrixGraph[T]) AdjacentVertices(vertex T) []T {
 	return adjVertices
 }
 
+func (graph *AdjacencyMatrixGraph[T]) BFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphBFSIterator[T](graph, startVertex)
+	return &iterator
+}
+func (graph *AdjacencyMatrixGraph[T]) DFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphDFSIterator[T](graph, startVertex)
+	return &iterator
+}
+
 type AdjacencyMatrixWeightedGraph[T comparable] struct {
 	adjacencyMatrixGraphImpl[T, *int]
 }
@@ -127,4 +140,13 @@ func (graph AdjacencyMatrixWeightedGraph[T]) EdgeWeight(vert1, vert2 T) int {
 		panic(fmt.Sprintf("Edge between %v and %v is not found", vert1, vert2))
 	}
 	return *adjValue
+}
+
+func (graph *AdjacencyMatrixWeightedGraph[T]) BFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphBFSIterator[T](graph, startVertex)
+	return &iterator
+}
+func (graph *AdjacencyMatrixWeightedGraph[T]) DFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphDFSIterator[T](graph, startVertex)
+	return &iterator
 }

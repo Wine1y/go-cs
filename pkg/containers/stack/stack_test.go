@@ -8,7 +8,7 @@ import (
 
 func TestSliceStack(t *testing.T) {
 	stack := NewSliceStackWithSize[int](3)
-	tu.AssertEqualsNamed(t, "SliceStack is initially empty", stack.Empty(), true)
+	tu.Assert(t, "SliceStack is initially empty", stack.Empty())
 	tu.AssertPanics(
 		t,
 		"SliceStack panics on \"Pop\" underflow",
@@ -24,8 +24,8 @@ func TestSliceStack(t *testing.T) {
 	stack.Push(2)
 	stack.Push(3)
 	tu.AssertEqualsNamed(t, "SliceStack length increases when pushed", stack.Length(), 3)
-	tu.AssertEqualsNamed(t, "SliceStack is not empty when pushed", stack.Empty(), false)
-	tu.AssertEqualsNamed(t, "SliceStack is full when length == size", stack.Full(), true)
+	tu.Assert(t, "SliceStack is not empty when pushed", !stack.Empty())
+	tu.Assert(t, "SliceStack is full when length == size", stack.Full())
 
 	stack.Push(4)
 	tu.AssertEqualsNamed(t, "SliceStack will grow when overflowed", stack.Length(), 4)
@@ -37,7 +37,7 @@ func TestSliceStack(t *testing.T) {
 
 func TestArrayStack(t *testing.T) {
 	stack := NewArrayStack[int](3)
-	tu.AssertEqualsNamed(t, "ArrayStack is initially empty", stack.Empty(), true)
+	tu.Assert(t, "ArrayStack is initially empty", stack.Empty())
 	tu.AssertPanics(
 		t,
 		"ArrayStack panics on \"Pop\" underflow",
@@ -53,8 +53,8 @@ func TestArrayStack(t *testing.T) {
 	stack.Push(2)
 	stack.Push(3)
 	tu.AssertEqualsNamed(t, "ArrayStack length increases when pushed", stack.Length(), 3)
-	tu.AssertEqualsNamed(t, "ArrayStack is not empty when pushed", stack.Empty(), false)
-	tu.AssertEqualsNamed(t, "ArrayStack is full when length == size", stack.Full(), true)
+	tu.Assert(t, "ArrayStack is not empty when pushed", !stack.Empty())
+	tu.Assert(t, "ArrayStack is full when length == size", stack.Full())
 
 	tu.AssertPanics(
 		t,
@@ -69,7 +69,7 @@ func TestArrayStack(t *testing.T) {
 
 func TestLinkedListStack(t *testing.T) {
 	stack := NewLinkedListStack[int]()
-	tu.AssertEqualsNamed(t, "LinkedListStack is initially empty", stack.Empty(), true)
+	tu.Assert(t, "LinkedListStack is initially empty", stack.Empty())
 	tu.AssertPanics(
 		t,
 		"LinkedListStack panics on \"Pop\" underflow",
@@ -85,8 +85,8 @@ func TestLinkedListStack(t *testing.T) {
 	stack.Push(2)
 	stack.Push(3)
 	tu.AssertEqualsNamed(t, "LinkedListStack length increases when pushed", stack.Length(), 3)
-	tu.AssertEqualsNamed(t, "LinkedListStack is not empty when pushed", stack.Empty(), false)
-	tu.AssertEqualsNamed(t, "LinkedListStack can't be full", stack.Full(), false)
+	tu.Assert(t, "LinkedListStack is not empty when pushed", !stack.Empty())
+	tu.Assert(t, "LinkedListStack can't be full", !stack.Full())
 
 	tu.AssertEqualsNamed(t, "LinkedListStack popped returns right value", stack.Pop(), 3)
 	tu.AssertEqualsNamed(t, "LinkedListStack returns right top value", stack.Top(), 2)

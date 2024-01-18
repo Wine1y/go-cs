@@ -2,6 +2,13 @@ package testingutils
 
 import "testing"
 
+func Assert(t *testing.T, name string, condition bool) {
+	t.Helper()
+	if !condition {
+		t.Fatalf("Expected: %v", name)
+	}
+}
+
 func AssertEquals[T comparable](t *testing.T, real, expected T) {
 	t.Helper()
 	if expected != real {

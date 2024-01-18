@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	linkedlist "github.com/Wine1y/go-cs/pkg/containers/linked_list"
+	"github.com/Wine1y/go-cs/pkg/utils"
 )
 
 type AdjacencyListsGraph[T comparable] struct {
@@ -48,6 +49,15 @@ func (graph AdjacencyListsGraph[T]) AdjacentVertices(vertex T) []T {
 		adjVertices = append(adjVertices, iterator.Next().Data())
 	}
 	return adjVertices
+}
+
+func (graph *AdjacencyListsGraph[T]) BFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphBFSIterator[T](graph, startVertex)
+	return &iterator
+}
+func (graph *AdjacencyListsGraph[T]) DFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphDFSIterator[T](graph, startVertex)
+	return &iterator
 }
 
 func (graph AdjacencyListsGraph[T]) getVertexList(vertex T) linkedlist.LinkedList[T] {
@@ -117,6 +127,15 @@ func (graph AdjacencyListsWeightedGraph[T]) EdgeWeight(vert1, vert2 T) int {
 		}
 	}
 	panic(fmt.Sprintf("Edge between %v and %v is not found", vert1, vert2))
+}
+
+func (graph *AdjacencyListsWeightedGraph[T]) BFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphBFSIterator[T](graph, startVertex)
+	return &iterator
+}
+func (graph *AdjacencyListsWeightedGraph[T]) DFSIterator(startVertex T) utils.Iterator[T] {
+	iterator := NewGraphDFSIterator[T](graph, startVertex)
+	return &iterator
 }
 
 func (graph AdjacencyListsWeightedGraph[T]) getVertexList(vertex T) linkedlist.LinkedList[graphEdge[T]] {

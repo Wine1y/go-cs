@@ -8,7 +8,7 @@ import (
 
 func TestCircularArrayQueue(t *testing.T) {
 	queue := NewCircularArrayQueue[int](3)
-	tu.AssertEqualsNamed(t, "CircularArrayQueue is initially empty", queue.Empty(), true)
+	tu.Assert(t, "CircularArrayQueue is initially empty", queue.Empty())
 
 	tu.AssertPanics(
 		t,
@@ -27,8 +27,8 @@ func TestCircularArrayQueue(t *testing.T) {
 	queue.EnQueue(3)
 
 	tu.AssertEqualsNamed(t, "CircularArrayQueue length increases when enqued", queue.Length(), 3)
-	tu.AssertEqualsNamed(t, "CircularArrayQueue is not empty when enqued", queue.Empty(), false)
-	tu.AssertEqualsNamed(t, "CircularArrayQueue is full when length == size", queue.Full(), true)
+	tu.Assert(t, "CircularArrayQueue is not empty when enqued", !queue.Empty())
+	tu.Assert(t, "CircularArrayQueue is full when length == size", queue.Full())
 
 	tu.AssertPanics(
 		t,
@@ -53,7 +53,7 @@ func TestCircularArrayQueue(t *testing.T) {
 
 func TestCircularSliceQueue(t *testing.T) {
 	queue := NewCircularSliceQueueWithSize[int](3)
-	tu.AssertEqualsNamed(t, "CircularSliceQueue is initially empty", queue.Empty(), true)
+	tu.Assert(t, "CircularSliceQueue is initially empty", queue.Empty())
 
 	tu.AssertPanics(
 		t,
@@ -72,8 +72,8 @@ func TestCircularSliceQueue(t *testing.T) {
 	queue.EnQueue(3)
 
 	tu.AssertEqualsNamed(t, "CircularSliceQueue length increases when enqued", queue.Length(), 3)
-	tu.AssertEqualsNamed(t, "CircularSliceQueue is not empty when enqued", queue.Empty(), false)
-	tu.AssertEqualsNamed(t, "CircularSliceQueue is full when length == size", queue.Full(), true)
+	tu.Assert(t, "CircularSliceQueue is not empty when enqued", !queue.Empty())
+	tu.Assert(t, "CircularSliceQueue is full when length == size", queue.Full())
 
 	queue.EnQueue(4)
 	tu.AssertEqualsNamed(t, "CircularSliceQueue grows when overflowed", queue.Length(), 4)
@@ -96,7 +96,7 @@ func TestCircularSliceQueue(t *testing.T) {
 
 func TestLinkedListQueue(t *testing.T) {
 	queue := NewLinkedListQueue[int]()
-	tu.AssertEqualsNamed(t, "LinkedListQueue is initially empty", queue.Empty(), true)
+	tu.Assert(t, "LinkedListQueue is initially empty", queue.Empty())
 
 	tu.AssertPanics(
 		t,
@@ -115,8 +115,8 @@ func TestLinkedListQueue(t *testing.T) {
 	queue.EnQueue(3)
 
 	tu.AssertEqualsNamed(t, "LinkedListQueue length increases when enqued", queue.Length(), 3)
-	tu.AssertEqualsNamed(t, "LinkedListQueue is not empty when enqued", queue.Empty(), false)
-	tu.AssertEqualsNamed(t, "LinkedListQueue can't be full", queue.Full(), false)
+	tu.Assert(t, "LinkedListQueue is not empty when enqued", !queue.Empty())
+	tu.Assert(t, "LinkedListQueue can't be full", !queue.Full())
 
 	queue.DeQueue()
 	tu.AssertEqualsNamed(t, "LinkedListQueue returns right front value", queue.Front(), 2)
