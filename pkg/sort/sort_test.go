@@ -35,3 +35,15 @@ func TestSelectionSort(t *testing.T) {
 func TestInsertionSort(t *testing.T) {
 	testInPlaceSorting(t, InsertionSort[int])
 }
+
+func TestShellSort(t *testing.T) {
+	testInPlaceSorting(t, ShellSort[int])
+}
+
+func TestMergeSort(t *testing.T) {
+	testSorting(t, MergeSort[int])
+}
+
+func TestQuickSort(t *testing.T) {
+	testInPlaceSorting(t, QuickSort[int])
+}
