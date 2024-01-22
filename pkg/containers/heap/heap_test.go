@@ -39,7 +39,7 @@ func TestMaxBinaryHeap(t *testing.T) {
 	tu.AssertEqualsNamed(t, "Heap \"Replace\" works correctly when new < old", heap.Peek(), 5)
 
 	values := []int{10, 3, 7, 4, 6}
-	heapified := Heapify[int](values, MaxHeapOrder)
+	heapified := HeapifyBinaryHeap[int](values, MaxHeapOrder)
 
 	sort.Slice(values, func(i, j int) bool { return values[i] > values[j] })
 	for _, value := range values {
@@ -79,7 +79,7 @@ func TestMinBinaryHeap(t *testing.T) {
 	tu.AssertEqualsNamed(t, "Heap \"Replace\" works correctly when new < old", heap.Peek(), 8)
 
 	values := []int{10, 3, 7, 4, 6}
-	heapified := Heapify[int](values, MinHeapOrder)
+	heapified := HeapifyBinaryHeap[int](values, MinHeapOrder)
 
 	sort.Slice(values, func(i, j int) bool { return values[i] < values[j] })
 	for _, value := range values {

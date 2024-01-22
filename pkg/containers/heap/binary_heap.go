@@ -21,7 +21,7 @@ func NewBinaryHeapWithSize[T cmp.Ordered](size int, order HeapOrder[T]) BinaryHe
 	}
 }
 
-func Heapify[T cmp.Ordered](slice []T, order HeapOrder[T]) BinaryHeap[T] {
+func HeapifyBinaryHeap[T cmp.Ordered](slice []T, order HeapOrder[T]) BinaryHeap[T] {
 	heap := NewBinaryHeapWithSize[T](len(slice), order)
 	for _, value := range slice {
 		heap.Push(value)
